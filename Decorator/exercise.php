@@ -30,7 +30,20 @@ abstract class HtmlDecorator implements HtmlElement
 {
     protected $element;
 
-    // @todo here the code to implement
+    public function __construct(HtmlElement $element)
+    {
+        $this->element = $element;
+    }
+
+    public function getName()
+    {
+        return $this->element->getName();
+    }
+
+    public function __toString()
+    {
+        return $this->element->__toString();
+    }
 }
 
 class LabelDecorator extends HtmlDecorator
