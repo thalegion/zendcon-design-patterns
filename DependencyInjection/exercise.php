@@ -1,26 +1,47 @@
 <?php
 
-namespace MyShop {
+namespace MyShop
+{
 
-    class Database {
-        public function query() {
+    class Database
+    {
+        public function query()
+        {
             return array('1', '2', '3');
         }
     }
 
-    // @TODO Implement constructor injection DatabaseConstructorConsumer
-    // with worker method:
-    //
-    //    public function doSomething() {
-    //        return implode(', ', $this->database->query());
-    //    }
+    class DatabaseConstructorConsumer
+    {
+        protected $db;
 
-    // @TODO Implement constructor injection DatabaseSetterConsumer
-    // with same worker method above
+        public function __construct(Database $db)
+        {
+            $this->db = $db;
+        }
 
+        public function doSomething()
+        {
+            return implode(', ', $this->db->query());
+        }
+    }
+
+    class DatabaseSetterConsumer
+    {
+        public function setDatabase(Database $db)
+        {
+            $this->db = $db;
+        }
+
+        public function doSomething()
+        {
+            return implode(', ', $this->db->query());
+        }
+    }
 }
 
-namespace {
+namespace
+{
 
     use MyShop\Database;
     use MyShop\DatabaseConstructorConsumer;
