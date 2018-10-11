@@ -28,15 +28,44 @@ namespace MyCompanyShop {
     use ShopingCartFramework\ProductFactoryInterface;
     use ShopingCartFramework\ProductInterface;
 
-    // @TODO implement MyShopProductFactory with internal database of:
-    //        $database = [
-    //            'BumperSticker1' => 'Cool bumper sticker',
-    //            'CoffeeTableBook5' => 'Coffee Table book',
-    //        ];
+    class MyShopProductFactory implements  ProductFactoryInterface {
+        static private $database = [
+                'BumperSticker1' => 'Cool bumper sticker',
+                'CoffeeTableBook5' => 'Coffee Table book',
+            ];
 
+        public function createProduct($productCode)
+        {
+            if (array_key_exists($productCode, self::$database)) {
+                return new MyShopProduct($productCode, self::$database[$productCode]);
+            }
+
+            return null;
+        }
+    }
 
 
     // @TODO implement MyShopProduct
+    class MyShopProduct implements ProductInterface {
+
+        protected $code, $description;
+
+        public function __construct($code, $description)
+        {
+            $this->code = $code;
+            $this->description = $description;
+        }
+
+        public function getShopProductCode()
+        {
+            return $this->code;
+        }
+
+        public function getShopDescription()
+        {
+            return $this->description;
+        }
+    }
 
 }
 
