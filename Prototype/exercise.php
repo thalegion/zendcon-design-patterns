@@ -9,7 +9,8 @@ namespace ShopingCartFramework {
         public function listProducts(array $codes) {
             $output = [];
             foreach ($codes as $code) {
-                // @TODO create an actual $product, and initialize it
+                $product = clone $this->productPrototype;
+                $product->initialize($code);
                 $output[] = $product->getShopProductCode() . ' - ' . $product->getShopDescription();
             }
             return implode(PHP_EOL, $output);
@@ -24,7 +25,29 @@ namespace ShopingCartFramework {
 
 namespace MyCompanyShop {
     use ShopingCartFramework\ProductInterface;
-    // @TODO implement MyShopProduct prototype
+
+    class MyShopProduct implements ProductInterface {
+        protected $productService, $code, $description;
+
+        public function __construct($productService)
+        {
+            $this->productService = $productService;
+        }
+        public function initialize($code)
+        {
+            $this->code = $code;
+            $this->description = call_user_func($this->productService, $code);
+        }
+        public function getShopProductCode()
+        {
+            return $this->code;
+        }
+        public function getShopDescription()
+        {
+            return $this->description;
+        }
+    }
+
 
 }
 
