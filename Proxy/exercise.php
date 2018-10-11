@@ -27,9 +27,20 @@ class Image implements ImageInterface
 
 class ProxyImage implements ImageInterface
 {
-    protected $image;
+    protected $image, $filename;
 
-    // @todo here the code to implement
+    public function __construct($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    public function display()
+    {
+        if ($this->image === null) {
+            $this->image = new Image($this->filename);
+        }
+        $this->image->display();
+    }
 }
 
 // Usage example
