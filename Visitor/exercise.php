@@ -68,7 +68,19 @@ interface Visitor
  */
 class IntFilter implements Visitor
 {
-    // @todo here the code to implement
+    public function visitSingleInputValue(SingleInputValue $inputValue)
+    {
+        $inputValue->set(intval($inputValue->get()));
+    }
+
+    public function visitMultipleInputValue(MultipleInputValue $inputValue)
+    {
+        $data = $inputValue->get();
+        foreach ($data as &$field) {
+            $field = intval($field);
+        }
+        $inputValue->set($data);
+    }
 }
 
 /**
@@ -77,7 +89,17 @@ class IntFilter implements Visitor
  */
 class AscendingSort implements Visitor
 {
-    // @todo here the code to implement
+    public function visitSingleInputValue(SingleInputValue $inputValue)
+    {
+        throw new Exception("Only for multiple values");
+    }
+
+    public function visitMultipleInputValue(MultipleInputValue $inputValue)
+    {
+        $data = $inputValue->get();
+        asort($data);
+        $inputValue->set($data);
+    }
 }
 
 $userId = new SingleInputValue("42");
