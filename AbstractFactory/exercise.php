@@ -40,10 +40,81 @@ namespace MyCompanyShop {
     use ShopingCartFramework\ShippingMethodInterface;
 
     // @TODO Implement the abstract factory MyShopProductFactory
+    class MyShopProductFactory implements ShopFactoryInterface {
+        protected $productsData;
+        protected $shippingMethodsData;
+
+        public function __construct(Array $productsData, Array $shippingMethodsData) {
+            $this->productsData = $productsData;
+            $this->shippingMethodsData = $shippingMethodsData;
+        }
+
+        public function createProduct($productCode) {
+            if (array_key_exists($productCode, $this->productsData)) {
+                return new \MyCompanyShop\MyShopProduct(
+                    $productCode,
+                    $this->productsData[$productCode][0],
+                    $this->productsData[$productCode][1]
+                );
+            }
+        }
+
+        public function createShippingMethod($name) {
+            if (array_key_exists($name, $this->shippingMethodsData)) {
+                return new \MyCompanyShop\MyShippingMethod(
+                    $name,
+                    $this->shippingMethodsData[$name][0],
+                    $this->shippingMethodsData[$name][1]
+                );
+            }
+        }
+    }
 
     // @TODO Implement the product MyShopProduct
+    class MyShopProduct implements ProductInterface {
+        protected $code;
+        protected $description;
+        protected $weight;
+
+        public function __construct($code, $description, $weight) {
+            $this->code = $code;
+            $this->description = $description;
+            $this->weight = $weight;
+        }
+
+        public function getShopProductCode() {
+            return $this->code;
+        }
+
+        public function getShopDescription() {
+            return $this->description;
+        }
+
+        public function getShopWeight() {
+            return $this->weight;
+        }
+    }
 
     // @TODO Implement Shipping Method MyShippingMethod
+    class MyShippingMethod implements ShippingMethodInterface {
+        protected $name;
+        protected $miles;
+        protected $weight;
+
+        public function __construct($name, $miles, $weight) {
+            $this->name = $name;
+            $this->miles = $miles;
+            $this->weight = $weight;
+        }
+
+        public function getName() {
+            return $this->name;
+        }
+
+        public function getCostEstimate($miles, ProductInterface $product) {
+            return $miles * $this->miles + $product->getShopWeight() * $this->weight;
+        }
+    }
 
 
 }
