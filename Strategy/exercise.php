@@ -5,6 +5,7 @@ namespace MyCompanyShop {
         public $name;
         public $listPrice;
         public $sellingPrice;
+        public $manufacturer;
     }
 
     class ProductCollection {
@@ -21,7 +22,12 @@ namespace MyCompanyShop {
          */
         public function filter(ProductFilteringStrategy $filterStrategy) {
             $filteredProducts = array();
-            //@TODO use the strategy to filter products that don't meet criteria
+
+            foreach ($this->getProductsArray() as $product) {
+                if ($filterStrategy->filter($product)) {
+                    $filteredProducts[] = $product;
+                }
+            }
             return new ProductCollection($filteredProducts);
         }
 
@@ -38,8 +44,35 @@ namespace MyCompanyShop {
         public function filter(Product $product);
     }
 
-    //@TODO implement a strategy for filtering products by maximum price
-    //@TODO implement a strategy for filtering products by manufacturer
+    class MaxPriceFilter implements ProductFilteringStrategy
+    {
+        private $price;
+
+        public function __construct($price)
+        {
+            $this->price = $price;
+        }
+
+        public function filter(Product $product)
+        {
+            return $product->listPrice <= $this->price;
+        }
+    }
+
+    class ManufacturerFilter implements ProductFilteringStrategy
+    {
+        private $manufacturer;
+
+        public function __construct($manufacturer)
+        {
+            $this->manufacturer = $manufacturer;
+        }
+
+        public function filter(Product $product)
+        {
+            return $product->manufacturer == $this->manufacturer;
+        }
+    }
 
 }
 
@@ -47,6 +80,8 @@ namespace {
 
     use MyCompanyShop\Product;
     use MyCompanyShop\ProductCollection;
+    use MyCompanyShop\ManufacturerFilter;
+    use MyCompanyShop\MaxPriceFilter;
 
     $p1 = new Product;
     $p1->listPrice = 100;
